@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gerador de Ofícios</title>
+    <title>Gerador de Ofícios - DRCI/PC-MT</title>
     <style>
         * {
             margin: 0;
@@ -156,6 +156,13 @@
             align-items: end;
         }
 
+        .meta-fields-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 10px;
+        }
+
         .btn {
             background: linear-gradient(45deg, #48bb78, #38a169);
             color: white;
@@ -261,7 +268,7 @@
                 padding: 20px;
             }
             
-            .period-group, .email-prazo-group {
+            .period-group, .email-prazo-group, .meta-fields-grid {
                 grid-template-columns: 1fr;
             }
             
@@ -290,7 +297,8 @@
                 <option value="">Escolha um tipo de requisição...</option>
                 <option value="telefonica">Operadoras Telefônicas</option>
                 <option value="internet">Provedores de Internet</option>
-                <option value="social">Redes Sociais</option>
+                <option value="social">Redes Sociais - Dados Cadastrais e Preservação</option>
+                <option value="meta_recovery">Redes Sociais - Recuperação de Conta META</option>
                 <option value="servicos">Provedores de Serviços</option>
                 <option value="hospedagem">Servidores de Hospedagem</option>
                 <option value="financeira">Instituições Financeiras</option>
@@ -309,6 +317,7 @@
                     <option value="ATP">ATP</option>
                     <option value="AI">AI</option>
                     <option value="BOC">BOC</option>
+                    <option value="BO">BO</option>
                 </select>
             </div>
 
@@ -318,49 +327,126 @@
                 <p class="help-text">Digite apenas o número do procedimento (ex: 123/2025)</p>
             </div>
 
-            <div class="form-group">
+            <div class="form-group" id="empresaContainer">
                 <label class="form-label" for="empresa">Nome da Empresa/Instituição:</label>
                 <input type="text" id="empresa" class="form-control" placeholder="Digite o nome da empresa...">
                 <div id="suggestionsContainer" class="suggestions-container"></div>
             </div>
 
-            <div class="form-group">
-                <label class="form-label" for="identificador">Identificador de Busca:</label>
-                <select id="identificador" class="select-control">
-                    <option value="">Selecione...</option>
-                </select>
-            </div>
-
-            <div id="outrosContainer" class="form-group hidden">
-                <label class="form-label" for="identificadorCustomizado">Especifique o Identificador:</label>
-                <input type="text" id="identificadorCustomizado" class="form-control" placeholder="Ex: Número da conta, ID do usuário, etc.">
-                <p class="warning-text">⚠️ Importante: Indique primeiro qual tipo de identificador antes de inserir o valor.</p>
-            </div>
-
-            <div id="ipContainer" class="form-group hidden">
-                <label class="form-label" for="listaIps">Lista de IPs (um por linha):</label>
-                <textarea id="listaIps" class="ip-textarea" placeholder="192.168.1.1, 01/01/2025, 14:30, UTC-3"></textarea>
-                <p class="help-text">Formato: IP, data, hora, UTC (separados por vírgula ou espaço). Ex: 192.168.1.1, 01/01/2025, 14:30, UTC-3</p>
-            </div>
-
-            <div id="valorContainer" class="form-group">
-                <label class="form-label" for="valor">Valor do Identificador:</label>
-                <input type="text" id="valor" class="form-control" placeholder="Digite o valor do identificador...">
-            </div>
-
-            <div id="periodoContainer" class="form-group hidden">
-                <label class="form-label">Período de Busca:</label>
-                <div class="period-group">
-                    <div>
-                        <label class="form-label" for="periodoInicio">Início:</label>
-                        <input type="text" id="periodoInicio" class="form-control" placeholder="dd/mm/aaaa">
+            <!-- Campos específicos para META Recovery -->
+            <div id="metaRecoveryFields" class="hidden">
+                <div class="meta-fields-grid">
+                    <div class="form-group">
+                        <label class="form-label" for="plataforma">Plataforma:</label>
+                        <select id="plataforma" class="select-control">
+                            <option value="">Selecione...</option>
+                            <option value="Facebook">Facebook</option>
+                            <option value="Instagram">Instagram</option>
+                        </select>
                     </div>
-                    <div>
-                        <label class="form-label" for="periodoFim">Fim:</label>
-                        <input type="text" id="periodoFim" class="form-control" placeholder="dd/mm/aaaa">
+                    <div class="form-group">
+                        <label class="form-label" for="nomeUsuarioOriginal">Nome do usuário original:</label>
+                        <input type="text" id="nomeUsuarioOriginal" class="form-control" placeholder="Nome do usuário original">
                     </div>
                 </div>
-                <p class="help-text">(formato: dd/mm/aaaa)</p>
+
+                <div class="meta-fields-grid">
+                    <div class="form-group">
+                        <label class="form-label" for="urlPerfil">URL/nome do perfil:</label>
+                        <input type="text" id="urlPerfil" class="form-control" placeholder="URL ou nome do perfil">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="dataInvasao">Data aproximada da invasão (hackeamento):</label>
+                        <input type="text" id="dataInvasao" class="form-control" placeholder="dd/mm/aaaa">
+                    </div>
+                </div>
+
+                <div class="meta-fields-grid">
+                    <div class="form-group">
+                        <label class="form-label" for="idiomaOriginal">Idioma original do perfil:</label>
+                        <input type="text" id="idiomaOriginal" class="form-control" placeholder="Ex: Português (Brasil)">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="emailsAssociados">Email(s) associados com o perfil antes da invasão:</label>
+                        <input type="text" id="emailsAssociados" class="form-control" placeholder="email1@exemplo.com, email2@exemplo.com">
+                    </div>
+                </div>
+
+                <div class="meta-fields-grid">
+                    <div class="form-group">
+                        <label class="form-label" for="telefonesAssociados">Telefone(s) – com código de país – associados com o perfil antes da invasão (+55):</label>
+                        <input type="text" id="telefonesAssociados" class="form-control" placeholder="+55 11 99999-9999">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="verificacaoDoisFatores">Confirmação se a verificação de dois fatores estava ativada:</label>
+                        <select id="verificacaoDoisFatores" class="select-control">
+                            <option value="">Selecione...</option>
+                            <option value="Sim">Sim</option>
+                            <option value="Não">Não</option>
+                            <option value="Não sabe informar">Não sabe informar</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="emailSeguro">Email seguro do usuário (não pode estar ou ter sido associado, em momento algum, a nenhuma conta do Facebook/Instagram):</label>
+                    <input type="email" id="emailSeguro" class="form-control" placeholder="email.seguro@exemplo.com">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="atividadeCriminosa">Atividade criminosa em prática pela conta (por parte do invasor):</label>
+                    <textarea id="atividadeCriminosa" class="form-control" rows="3" placeholder="Descreva a atividade criminosa praticada pelo invasor..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="confirmacaoAutoridade">Confirmação de que a autoridade solicitante está realizando a solicitação de recuperação em nome do usuário/vítima:</label>
+                    <select id="confirmacaoAutoridade" class="select-control">
+                        <option value="">Selecione...</option>
+                        <option value="Sim, confirmo que estou realizando esta solicitação em nome do usuário/vítima">Sim, confirmo que estou realizando esta solicitação em nome do usuário/vítima</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Campos originais para outros tipos -->
+            <div id="originalFields">
+                <div class="form-group">
+                    <label class="form-label" for="identificador">Identificador de Busca:</label>
+                    <select id="identificador" class="select-control">
+                        <option value="">Selecione...</option>
+                    </select>
+                </div>
+
+                <div id="outrosContainer" class="form-group hidden">
+                    <label class="form-label" for="identificadorCustomizado">Especifique o Identificador:</label>
+                    <input type="text" id="identificadorCustomizado" class="form-control" placeholder="Ex: Número da conta, ID do usuário, etc.">
+                    <p class="warning-text">⚠️ Importante: Indique primeiro qual tipo de identificador antes de inserir o valor.</p>
+                </div>
+
+                <div id="ipContainer" class="form-group hidden">
+                    <label class="form-label" for="listaIps">Lista de IPs (um por linha):</label>
+                    <textarea id="listaIps" class="ip-textarea" placeholder="192.168.1.1, 01/01/2025, 14:30, UTC-3"></textarea>
+                    <p class="help-text">Formato: IP, data, hora, UTC (separados por vírgula ou espaço). Ex: 192.168.1.1, 01/01/2025, 14:30, UTC-3</p>
+                </div>
+
+                <div id="valorContainer" class="form-group">
+                    <label class="form-label" for="valor">Valor do Identificador:</label>
+                    <input type="text" id="valor" class="form-control" placeholder="Digite o valor do identificador...">
+                </div>
+
+                <div id="periodoContainer" class="form-group hidden">
+                    <label class="form-label">Período de Busca:</label>
+                    <div class="period-group">
+                        <div>
+                            <label class="form-label" for="periodoInicio">Início:</label>
+                            <input type="text" id="periodoInicio" class="form-control" placeholder="dd/mm/aaaa">
+                        </div>
+                        <div>
+                            <label class="form-label" for="periodoFim">Fim:</label>
+                            <input type="text" id="periodoFim" class="form-control" placeholder="dd/mm/aaaa">
+                        </div>
+                    </div>
+                    <p class="help-text">(formato: dd/mm/aaaa)</p>
+                </div>
             </div>
 
             <div class="email-prazo-group">
@@ -368,7 +454,7 @@
                     <label class="form-label" for="email">E-mail para Resposta:</label>
                     <input type="email" id="email" class="form-control" placeholder="seu.email@pjc.mt.gov.br">
                 </div>
-                <div class="form-group">
+                <div class="form-group" id="prazoContainer">
                     <label class="form-label" for="prazo">Prazo:</label>
                     <input type="text" id="prazo" class="form-control" value="" placeholder="Ex: 15 dias úteis, 72 horas, 10 dias corridos">
                     <p class="help-text">Especifique o prazo desejado (dias úteis, corridos, horas, etc.)</p>
@@ -411,12 +497,13 @@
     </div>
 
     <script>
-        // Dados das empresas e identificadores (MODIFICADO - alterações nos nomes das empresas)
+        // Dados das empresas e identificadores
         const empresasSugeridas = {
             'telefonica': ['VIVO S/A', 'CLARO S/A', 'TIM S/A', 'OI S/A'],
             'internet': ['NET VIRTUA', 'VIVO FIBRA', 'OI FIBRA', 'TIM LIVE', 'CLARO NET', 'COPEL TELECOM'],
             'social': ['WhatsApp LLC', 'Meta Platforms Inc (Facebook e Instagram)', 'X CORP (Twitter)', 
                        'GOOGLE Brasil Internet LTDA (YouTube)', 'TELEGRAM', 'TIKTOK', 'LINKEDIN', 'SNAPCHAT', 'DISCORD'],
+            'meta_recovery': ['META PLATFORMS, INC.'],
             'servicos': ['Apple Computer Brasil Ltda', 'Google Brasil Internet Ltda', 'MICROSOFT CORPORATION', 'VERIZON MEDIA (Yahoo)', 
                          'DROPBOX INC', 'AMAZON WEB SERVICES', 'ADOBE INC', 'SPOTIFY', 'NETFLIX'],
             'hospedagem': ['HOSTINGER', 'CLOUDFLARE', 'LOCAWEB', 'HOSTGATOR', 'TURBOCLOUD', 'KINGHOST', 
@@ -440,39 +527,31 @@
             'cripto': ['CPF/CNPJ', 'E-mail', 'Telefone', 'Endereço de carteira (wallet)', 'ID da conta/usuário', 'Hash da transação', 'OUTROS']
         };
 
-        const tiposRequisicao = {
-            'telefonica': 'Operadoras Telefônicas',
-            'internet': 'Provedores de Internet',
-            'social': 'Redes Sociais',
-            'servicos': 'Provedores de Serviços',
-            'hospedagem': 'Servidores de Hospedagem',
-            'financeira': 'Instituições Financeiras',
-            'cripto': 'Criptoativos'
-        };
-
         // Elementos DOM
         const tipoSelect = document.getElementById('tipoRequisicao');
         const configSection = document.getElementById('configSection');
         const empresaInput = document.getElementById('empresa');
+        const empresaContainer = document.getElementById('empresaContainer');
         const suggestionsContainer = document.getElementById('suggestionsContainer');
         const identificadorSelect = document.getElementById('identificador');
         const outrosContainer = document.getElementById('outrosContainer');
         const ipContainer = document.getElementById('ipContainer');
         const valorContainer = document.getElementById('valorContainer');
         const periodoContainer = document.getElementById('periodoContainer');
+        const prazoContainer = document.getElementById('prazoContainer');
+        const metaRecoveryFields = document.getElementById('metaRecoveryFields');
+        const originalFields = document.getElementById('originalFields');
         const resultadoTextarea = document.getElementById('resultadoTexto');
 
         // Função para formatação automática de data
         function formatarData(event) {
             let input = event.target;
-            let valor = input.value.replace(/\D/g, ''); // Remove tudo que não é dígito
+            let valor = input.value.replace(/\D/g, '');
             
-            // Limita a 8 dígitos (ddmmaaaa)
             if (valor.length > 8) {
                 valor = valor.substring(0, 8);
             }
             
-            // Formatar com barras
             let valorFormatado = '';
             if (valor.length > 0) {
                 valorFormatado = valor.substring(0, 2);
@@ -497,39 +576,49 @@
         document.getElementById('btnCopiarTitulo').addEventListener('click', copiarTitulo);
         document.getElementById('btnCopiarEmpresa').addEventListener('click', copiarEmpresa);
         
-        // Adicionar formatação automática de data aos campos específicos
+        // Adicionar formatação automática de data
         const periodoInicio = document.getElementById('periodoInicio');
         const periodoFim = document.getElementById('periodoFim');
+        const dataInvasao = document.getElementById('dataInvasao');
         
         periodoInicio.addEventListener('input', formatarData);
-        periodoInicio.addEventListener('keyup', formatarData);
         periodoFim.addEventListener('input', formatarData);
-        periodoFim.addEventListener('keyup', formatarData);
+        dataInvasao.addEventListener('input', formatarData);
 
         function onTipoSelected() {
             const tipoSelecionado = tipoSelect.value;
             
-            if (tipoSelecionado && tipoSelecionado !== "Escolha um tipo de requisição...") {
+            if (tipoSelecionado && tipoSelecionado !== "") {
                 configSection.classList.add('show');
                 
-                // Atualizar identificadores
-                const identificadorOptions = identificadores[tipoSelecionado] || [];
-                identificadorSelect.innerHTML = '<option value="">Selecione...</option>';
-                identificadorOptions.forEach(id => {
-                    const option = document.createElement('option');
-                    option.value = id;
-                    option.textContent = id;
-                    identificadorSelect.appendChild(option);
-                });
-                
-                // Atualizar sugestões de empresas
-                atualizarSugestoesEmpresas(tipoSelecionado);
-                
-                // Mostrar/ocultar período baseado no tipo (EXATAMENTE como no Python)
-                if (['telefonica', 'social', 'servicos'].includes(tipoSelecionado)) {
-                    periodoContainer.classList.remove('hidden');
+                if (tipoSelecionado === 'meta_recovery') {
+                    metaRecoveryFields.classList.remove('hidden');
+                    originalFields.classList.add('hidden');
+                    empresaContainer.classList.add('hidden');
+                    prazoContainer.classList.add('hidden');
+                    empresaInput.value = 'META PLATFORMS, INC.';
                 } else {
-                    periodoContainer.classList.add('hidden');
+                    metaRecoveryFields.classList.add('hidden');
+                    originalFields.classList.remove('hidden');
+                    empresaContainer.classList.remove('hidden');
+                    prazoContainer.classList.remove('hidden');
+                    
+                    const identificadorOptions = identificadores[tipoSelecionado] || [];
+                    identificadorSelect.innerHTML = '<option value="">Selecione...</option>';
+                    identificadorOptions.forEach(id => {
+                        const option = document.createElement('option');
+                        option.value = id;
+                        option.textContent = id;
+                        identificadorSelect.appendChild(option);
+                    });
+                    
+                    atualizarSugestoesEmpresas(tipoSelecionado);
+                    
+                    if (['telefonica', 'social', 'servicos'].includes(tipoSelecionado)) {
+                        periodoContainer.classList.remove('hidden');
+                    } else {
+                        periodoContainer.classList.add('hidden');
+                    }
                 }
             } else {
                 configSection.classList.remove('show');
@@ -548,7 +637,6 @@
                 const grid = document.createElement('div');
                 grid.className = 'suggestions-grid';
                 
-                // Limitar a 8 sugestões como no Python
                 empresasSugeridas[tipo].slice(0, 8).forEach(empresa => {
                     const btn = document.createElement('button');
                     btn.className = 'suggestion-btn';
@@ -585,7 +673,6 @@
             }
         }
 
-        // Processamento de IPs EXATAMENTE como no Python
         function processarIps(listaIps) {
             const ips = listaIps.split('\n').map(linha => linha.trim()).filter(linha => linha);
             
@@ -622,7 +709,48 @@
             }
         }
 
-        // Geração do texto do ofício MODIFICADO
+        function gerarTextoOficioMetaRecovery() {
+            const tipoProcedimento = document.getElementById('tipoProcedimento').value.trim();
+            const numeroProcedimento = document.getElementById('numeroProcedimento').value.trim();
+            const email = document.getElementById('email').value.trim();
+            
+            const plataforma = document.getElementById('plataforma').value;
+            const nomeUsuarioOriginal = document.getElementById('nomeUsuarioOriginal').value.trim();
+            const urlPerfil = document.getElementById('urlPerfil').value.trim();
+            const dataInvasao = document.getElementById('dataInvasao').value.trim();
+            const idiomaOriginal = document.getElementById('idiomaOriginal').value.trim();
+            const emailsAssociados = document.getElementById('emailsAssociados').value.trim();
+            const telefonesAssociados = document.getElementById('telefonesAssociados').value.trim();
+            const verificacaoDoisFatores = document.getElementById('verificacaoDoisFatores').value;
+            const emailSeguro = document.getElementById('emailSeguro').value.trim();
+            const atividadeCriminosa = document.getElementById('atividadeCriminosa').value.trim();
+            const confirmacaoAutoridade = document.getElementById('confirmacaoAutoridade').value;
+            
+            const textoOficio = `Senhor Diretor,
+
+Visando instruir o ${tipoProcedimento} nº ${numeroProcedimento}, na qualidade de Delegado(a) de Polícia Civil, no exercício das atribuições que me conferem os arts. 144, § 4º, da CF c/c art. 2º, §2º, da Lei 12.830/2013, requisito a recuperação da conta abaixo identificada, conforme dados a seguir:
+
+1. Plataforma: ${plataforma}
+2. Nome do usuário original: ${nomeUsuarioOriginal}
+3. URL/nome do perfil: ${urlPerfil}
+4. Data aproximada da invasão (hackeamento): ${dataInvasao}
+5. Idioma original do perfil: ${idiomaOriginal}
+6. Email(s) associados com o perfil antes da invasão: ${emailsAssociados}
+7. Telefone(s) – com código de país – associados com o perfil antes da invasão: ${telefonesAssociados}
+8. Confirmação se a verificação de dois fatores estava ativada: ${verificacaoDoisFatores}
+9. Email seguro do usuário (não pode estar ou ter sido associado, em momento algum, a nenhuma conta do Facebook/Instagram): ${emailSeguro}
+10. Atividade criminosa em prática pela conta (por parte do invasor): ${atividadeCriminosa}
+11. Confirmação de que a autoridade solicitante está realizando a solicitação de recuperação em nome do usuário/vítima: ${confirmacaoAutoridade}
+
+A investigação policial é sigilosa (art. 20 CPP) e, por isso, o usuário não deve ser notificado acerca das requisições policiais.
+
+Por fim, solicito que a resposta seja encaminhada para o e-mail ${email}.
+
+Atenciosamente,`;
+
+            return textoOficio;
+        }
+
         function gerarTextoOficio(tipoKey, identificadorTexto) {
             const identificador = identificadorSelect.value;
             const valor = document.getElementById('valor').value;
@@ -638,8 +766,9 @@
             let periodoTexto = "";
             let prazoTexto = "";
             
-            // Texto base comum com procedimento incluído
-            const textoInicial = `Visando instruir o ${tipoProcedimento} nº ${numeroProcedimento}, na qualidade de Delegado(a) de Polícia Civil, no exercício das atribuições que me conferem os art. 144, § 4º, da CF c/c art. 2º, §2º, da Lei 12.830/2013, e com fundamento nos arts. 10, §3º e 15, da Lei 12.965/2014 c/c art. 17-B da Lei 9.613/98 e art. 15 da Lei 12.850/2013`;
+            const textoInicial = `Senhor Diretor,
+
+Visando instruir o ${tipoProcedimento} nº ${numeroProcedimento}, na qualidade de Delegado(a) de Polícia Civil, no exercício das atribuições que me conferem os art. 144, § 4º, da CF c/c art. 2º, §2º, da Lei 12.830/2013, e com fundamento nos arts. 10, §3º e 15, da Lei 12.965/2014 c/c art. 17-B da Lei 9.613/98 e art. 15 da Lei 12.850/2013`;
             
             if (tipoKey === 'telefonica') {
                 if (identificador === 'Telefone') {
@@ -689,16 +818,18 @@
                 prazoTexto = `, no prazo de ${prazo}.`;
                 
             } else if (tipoKey === 'financeira') {
-                // Para financeira, usar fundamento específico (sem MCI)
-                const textoInicialFinanceira = `Visando instruir o ${tipoProcedimento} nº ${numeroProcedimento}, na qualidade de Delegado(a) de Polícia Civil, no exercício das atribuições que me conferem os art. 144, § 4º, da CF c/c art. 2º, §2º, da Lei 12.830/2013, e com fundamento no art. 17-B da Lei 9.613/98`;
+                const textoInicialFinanceira = `Senhor Diretor,
+
+Visando instruir o ${tipoProcedimento} nº ${numeroProcedimento}, na qualidade de Delegado(a) de Polícia Civil, no exercício das atribuições que me conferem os art. 144, § 4º, da CF c/c art. 2º, §2º, da Lei 12.830/2013, e com fundamento no art. 17-B da Lei 9.613/98`;
                 textoBase = `${textoInicialFinanceira}, venho requisitar os dados cadastrais vinculados ao identificador: ${identificadorTexto}`;
                 clausulaPreservacao = `\n\nA resposta deverá conter os seguintes dados: documentos de identificação, filiação, dados de contato (telefone e e-mail) informados, data de abertura e endereço do titular; selfie (foto do próprio rosto) e cópia (digitalizada) dos documentos apresentados; dados do dispositivo (Protocolo de Internet - IP, atributos do dispositivo e dados de geolocalização) utilizados na criação da conta.\n\nAdicionalmente, requisito, com base no art. 15, § 1º, da Lei nº 12.965/2014, a preservação de dados e de todos os registros de conexão e de acesso a aplicações de internet relacionados ao(s) identificador(es) acima mencionado(s), pelo período de 1 (um) ano, a partir da data desta comunicação, a fim de viabilizar futura ordem judicial para acesso ao seu conteúdo.`;
                 periodoTexto = "";
                 prazoTexto = `, no prazo de ${prazo}.`;
                 
             } else if (tipoKey === 'cripto') {
-                // Para cripto, usar fundamento específico (sem MCI)
-                const textoInicialCripto = `Visando instruir o ${tipoProcedimento} nº ${numeroProcedimento}, na qualidade de Delegado(a) de Polícia Civil, no exercício das atribuições que me conferem os art. 144, § 4º, da CF c/c art. 2º, §2º, da Lei 12.830/2013, e com fundamento no art. 17-B da Lei 9.613/98`;
+                const textoInicialCripto = `Senhor Diretor,
+
+Visando instruir o ${tipoProcedimento} nº ${numeroProcedimento}, na qualidade de Delegado(a) de Polícia Civil, no exercício das atribuições que me conferem os art. 144, § 4º, da CF c/c art. 2º, §2º, da Lei 12.830/2013, e com fundamento no art. 17-B da Lei 9.613/98`;
                 textoBase = `${textoInicialCripto}, venho requisitar os dados cadastrais vinculados ao identificador: ${identificadorTexto}`;
                 clausulaPreservacao = `\n\nOs dados cadastrais devem contemplar o nome completo, filiação, endereço, estado civil, profissão, e-mail, e-mail de recuperação, data de nascimento, foto selfie eventualmente enviada, documentos completo do KYC (conheça seu cliente), número de telefone celular fornecido no ato da abertura da conta/cadastro e outros dados disponíveis.\n\nAdicionalmente, requisito, com base no art. 15, § 1º, da Lei nº 12.965/2014, a preservação de dados e de todos os registros de conexão e de acesso a aplicações de internet relacionados ao(s) identificador(es) acima mencionado(s), pelo período de 1 (um) ano, a partir da data desta comunicação, a fim de viabilizar futura ordem judicial para acesso ao seu conteúdo.`;
                 periodoTexto = "";
@@ -710,14 +841,37 @@
             return oficio;
         }
 
+        function validarCamposMetaRecovery() {
+            const campos = [
+                'plataforma',
+                'nomeUsuarioOriginal',
+                'urlPerfil',
+                'dataInvasao',
+                'idiomaOriginal',
+                'emailsAssociados',
+                'telefonesAssociados',
+                'verificacaoDoisFatores',
+                'emailSeguro',
+                'atividadeCriminosa',
+                'confirmacaoAutoridade'
+            ];
+            
+            for (let campo of campos) {
+                const elemento = document.getElementById(campo);
+                if (!elemento.value.trim()) {
+                    const label = document.querySelector(`label[for="${campo}"]`).textContent;
+                    alert(`O campo "${label}" é obrigatório!`);
+                    return false;
+                }
+            }
+            return true;
+        }
+
         function gerarOficio() {
-            // Validar campos obrigatórios
             const tipoProcedimento = document.getElementById('tipoProcedimento').value.trim();
             const numeroProcedimento = document.getElementById('numeroProcedimento').value.trim();
-            const empresa = document.getElementById('empresa').value.trim();
-            const identificador = identificadorSelect.value;
             const email = document.getElementById('email').value.trim();
-            const prazo = document.getElementById('prazo').value.trim();
+            const tipoKey = tipoSelect.value;
             
             if (!tipoProcedimento || tipoProcedimento === 'Selecione o tipo...') {
                 alert('Tipo de procedimento é obrigatório!');
@@ -729,68 +883,81 @@
                 return;
             }
             
-            if (!empresa) {
-                alert('Nome da empresa é obrigatório!');
-                return;
-            }
-            
-            if (!identificador || identificador === 'Selecione...') {
-                alert('Identificador de busca é obrigatório!');
-                return;
-            }
-            
             if (!email) {
                 alert('E-mail para resposta é obrigatório!');
                 return;
             }
             
-            if (!prazo) {
-                alert('Prazo é obrigatório!');
-                return;
-            }
-            
-            // Validações específicas
-            let identificadorTexto = "";
-            
-            if (identificador === 'IP') {
-                const listaIps = document.getElementById('listaIps').value.trim();
-                if (!listaIps) {
-                    alert('Lista de IPs é obrigatória!');
-                    return;
-                }
-                identificadorTexto = processarIps(listaIps);
-            } else if (identificador === 'OUTROS') {
-                const identificadorCustomizado = document.getElementById('identificadorCustomizado').value.trim();
-                const valor = document.getElementById('valor').value.trim();
-                if (!identificadorCustomizado) {
-                    alert('Especificação do identificador é obrigatória!');
-                    return;
-                }
-                if (!valor) {
-                    alert('Valor do identificador é obrigatório!');
-                    return;
-                }
-                identificadorTexto = `${identificadorCustomizado}: ${valor}`;
-            } else {
-                const valor = document.getElementById('valor').value.trim();
-                if (!valor) {
-                    alert('Valor do identificador é obrigatório!');
-                    return;
-                }
-                identificadorTexto = `${identificador}: ${valor}`;
-            }
-            
             try {
-                const tipoKey = tipoSelect.value;
-                const oficio = gerarTextoOficio(tipoKey, identificadorTexto);
+                let oficio = "";
+                let titulo = "";
+                let empresa = "";
+                
+                if (tipoKey === 'meta_recovery') {
+                    if (!validarCamposMetaRecovery()) {
+                        return;
+                    }
+                    
+                    oficio = gerarTextoOficioMetaRecovery();
+                    titulo = `SOLICITAÇÃO DE RECUPERAÇÃO DE CONTA META - ${tipoProcedimento} nº ${numeroProcedimento}`;
+                    empresa = 'META PLATFORMS, INC.';
+                } else {
+                    const empresaVal = document.getElementById('empresa').value.trim();
+                    const identificador = identificadorSelect.value;
+                    const prazo = document.getElementById('prazo').value.trim();
+                    
+                    if (!empresaVal) {
+                        alert('Nome da empresa é obrigatório!');
+                        return;
+                    }
+                    
+                    if (!identificador || identificador === 'Selecione...') {
+                        alert('Identificador de busca é obrigatório!');
+                        return;
+                    }
+                    
+                    if (!prazo) {
+                        alert('Prazo é obrigatório!');
+                        return;
+                    }
+                    
+                    let identificadorTexto = "";
+                    
+                    if (identificador === 'IP') {
+                        const listaIps = document.getElementById('listaIps').value.trim();
+                        if (!listaIps) {
+                            alert('Lista de IPs é obrigatória!');
+                            return;
+                        }
+                        identificadorTexto = processarIps(listaIps);
+                    } else if (identificador === 'OUTROS') {
+                        const identificadorCustomizado = document.getElementById('identificadorCustomizado').value.trim();
+                        const valor = document.getElementById('valor').value.trim();
+                        if (!identificadorCustomizado) {
+                            alert('Especificação do identificador é obrigatória!');
+                            return;
+                        }
+                        if (!valor) {
+                            alert('Valor do identificador é obrigatório!');
+                            return;
+                        }
+                        identificadorTexto = `${identificadorCustomizado}: ${valor}`;
+                    } else {
+                        const valor = document.getElementById('valor').value.trim();
+                        if (!valor) {
+                            alert('Valor do identificador é obrigatório!');
+                            return;
+                        }
+                        identificadorTexto = `${identificador}: ${valor}`;
+                    }
+                    
+                    oficio = gerarTextoOficio(tipoKey, identificadorTexto);
+                    titulo = `REQUISIÇÃO DE INFORMAÇÕES - ${tipoProcedimento} nº ${numeroProcedimento}`;
+                    empresa = empresaVal;
+                }
                 
                 resultadoTextarea.value = oficio;
-                
-                // Gerar título para cópia
-                const titulo = `REQUISIÇÃO DE INFORMAÇÕES - ${tipoProcedimento} nº ${numeroProcedimento}`;
                 document.getElementById('tituloOficio').value = titulo;
-                
-                // Preencher o nome da empresa no novo campo
                 document.getElementById('nomeEmpresa').value = empresa;
                 
                 alert('Ofício gerado com sucesso!');
@@ -805,7 +972,6 @@
                 navigator.clipboard.writeText(texto).then(() => {
                     alert('Texto copiado para a área de transferência!');
                 }).catch(err => {
-                    // Fallback para navegadores mais antigos
                     resultadoTextarea.select();
                     document.execCommand('copy');
                     alert('Texto copiado para a área de transferência!');
@@ -821,7 +987,6 @@
                 navigator.clipboard.writeText(titulo).then(() => {
                     alert('Assunto copiado para a área de transferência!');
                 }).catch(err => {
-                    // Fallback para navegadores mais antigos
                     const tituloField = document.getElementById('tituloOficio');
                     tituloField.select();
                     document.execCommand('copy');
@@ -838,7 +1003,6 @@
                 navigator.clipboard.writeText(empresa).then(() => {
                     alert('Nome da empresa copiado para a área de transferência!');
                 }).catch(err => {
-                    // Fallback para navegadores mais antigos
                     const empresaField = document.getElementById('nomeEmpresa');
                     empresaField.select();
                     document.execCommand('copy');
@@ -868,15 +1032,28 @@
             document.getElementById('email').value = '';
             document.getElementById('prazo').value = '';
             
-            // Reset do combo de identificadores
+            document.getElementById('plataforma').value = '';
+            document.getElementById('nomeUsuarioOriginal').value = '';
+            document.getElementById('urlPerfil').value = '';
+            document.getElementById('dataInvasao').value = '';
+            document.getElementById('idiomaOriginal').value = '';
+            document.getElementById('emailsAssociados').value = '';
+            document.getElementById('telefonesAssociados').value = '';
+            document.getElementById('verificacaoDoisFatores').value = '';
+            document.getElementById('emailSeguro').value = '';
+            document.getElementById('atividadeCriminosa').value = '';
+            document.getElementById('confirmacaoAutoridade').value = '';
+            
             identificadorSelect.innerHTML = '<option value="">Selecione...</option>';
             
-            // Ocultar containers específicos
             outrosContainer.classList.add('hidden');
             ipContainer.classList.add('hidden');
             valorContainer.classList.remove('hidden');
+            metaRecoveryFields.classList.add('hidden');
+            originalFields.classList.remove('hidden');
+            empresaContainer.classList.remove('hidden');
+            prazoContainer.classList.remove('hidden');
             
-            // Limpar sugestões
             suggestionsContainer.innerHTML = '';
         }
     </script>
