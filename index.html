@@ -215,9 +215,9 @@
             <label class="form-label" for="tipoRequisicao">Tipo de Requisição:</label>
             <select id="tipoRequisicao" class="select-control">
                 <option value="">Escolha um tipo de requisição...</option>
+                <option value="aereas">Companhias aéreas</option>
                 <option value="delivery">Aplicativos de delivery</option>
                 <option value="transporte">Aplicativos de transporte</option>
-                <option value="aereas">Companhias aéreas</option>
                 <option value="rodovias">Concessionárias de rodovias</option>
                 <option value="govbr">Conta GOV.BR</option>
                 <option value="cripto">Criptoativos</option>
@@ -308,6 +308,30 @@
                         <input type="text" id="dataInvasao" class="form-control" placeholder="dd/mm/aaaa">
                     </div>
                 </div>
+                <div class="meta-fields-grid">
+                    <div class="form-group">
+                        <label class="form-label" for="idiomaOriginal">Idioma original do perfil:</label>
+                        <input type="text" id="idiomaOriginal" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="emailsAssociados">Email(s) associados:</label>
+                        <input type="text" id="emailsAssociados" class="form-control">
+                    </div>
+                </div>
+                <div class="meta-fields-grid">
+                    <div class="form-group">
+                        <label class="form-label" for="telefonesAssociados">Telefone(s) (+55):</label>
+                        <input type="text" id="telefonesAssociados" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="verificacaoDoisFatores">2FA ativado?</label>
+                        <select id="verificacaoDoisFatores" class="select-control">
+                            <option value="Não sabe informar">Não sabe informar</option>
+                            <option value="Sim">Sim</option>
+                            <option value="Não">Não</option>
+                        </select>
+                    </div>
+                </div>
                 <div class="form-group">
                     <label class="form-label" for="emailSeguro">Email seguro:</label>
                     <input type="email" id="emailSeguro" class="form-control">
@@ -337,7 +361,7 @@
                 </div>
                 <div id="ipContainer" class="form-group hidden">
                     <label class="form-label" for="listaIps">Lista de IPs:</label>
-                    <textarea id="listaIps" class="ip-textarea"></textarea>
+                    <textarea id="listaIps" class="ip-textarea" placeholder="Um por linha..."></textarea>
                 </div>
                 <div id="valorContainer" class="form-group">
                     <label class="form-label" for="valor">Valor do Identificador:</label>
@@ -559,8 +583,9 @@
             const procN = document.getElementById('numeroProcedimento').value;
             const email = document.getElementById('email').value;
             const prazo = document.getElementById('prazo').value;
+            const destinatarioFinal = empresaInput.value;
             
-            if (!procT || !procN || !email) return alert('Preencha os campos obrigatórios.');
+            if (!procT || !procN || !email || !destinatarioFinal) return alert('Preencha os campos obrigatórios.');
 
             let texto = ''; let assunto = '';
 
@@ -573,7 +598,15 @@
                 texto = `Prezado(a) Senhor(a),\n\nEm conformidade com o art. 2º, §2º, da Lei 12.830/2013, a autoridade policial requisita de Vossa Senhoria o fornecimento de cópias das imagens registradas pelas câmeras de monitoramento de seu(sua) Estabelecimento/Residência, referentes ao período compreendido entre ${hI} e ${hF} (${fuso}) de ${data}.\n\nAs imagens deverão ser entregues nesta Delegacia, gravadas em mídia digital (pen drive, DVD, HD externo, etc.), no prazo de ${prazo}, a contar do recebimento deste ofício. Caso não possua os registros, solicitamos que nos informe formalmente os motivos da indisponibilidade através do e-mail ${email}.\n\nRessalto que o fornecimento das imagens é essencial para a apuração do crime investigado no ${procT} nº ${procN}.\n\nO descumprimento desta requisição, sem motivo legal justificado, poderá sujeitar o(a) responsável às sanções previstas no Art. 330 do Código Penal Brasileiro (Desobediência).\n\nAtenciosamente,`;
             } else if (tipo === 'meta_recovery') {
                 assunto = `SOLICITAÇÃO DE RECUPERAÇÃO DE CONTA META - ${procT} nº ${procN}`;
-                texto = `Senhor Diretor,\n\nVisando instruir o ${procT} nº ${procN}... (logica original mantida)`;
+                const plataforma = document.getElementById('plataforma').value;
+                const userOrig = document.getElementById('nomeUsuarioOriginal').value;
+                const url = document.getElementById('urlPerfil').value;
+                const dataInv = document.getElementById('dataInvasao').value;
+                const emailSeguro = document.getElementById('emailSeguro').value;
+                const atividade = document.getElementById('atividadeCriminosa').value;
+                const confirmacao = document.getElementById('confirmacaoAutoridade').value;
+
+                texto = `Senhor Diretor,\n\nVisando instruir o ${procT} nº ${procN}, na qualidade de Delegado(a) de Polícia Civil, requisito a recuperação da conta:\n\nPlataforma: ${plataforma}\nUsuário original: ${userOrig}\nURL/Perfil: ${url}\nData da invasão: ${dataInv}\nEmail seguro: ${emailSeguro}\nAtividade criminosa: ${atividade}\nConfirmação: ${confirmacao}\n\nResposta para: ${email}.\n\nAtenciosamente,`;
             } else {
                 assunto = `REQUISIÇÃO DE INFORMAÇÕES - ${procT} nº ${procN}`;
                 const idL = identificadorSelect.value;
@@ -589,7 +622,7 @@
 
             document.getElementById('resultadoTexto').value = texto;
             document.getElementById('tituloOficio').value = assunto;
-            document.getElementById('nomeEmpresa').value = empresaInput.value;
+            document.getElementById('nomeEmpresa').value = destinatarioFinal;
         });
 
         document.getElementById('btnCopiar').onclick = () => {
